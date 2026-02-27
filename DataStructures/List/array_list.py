@@ -104,6 +104,11 @@ def iterator(my_list):
     for elem in my_list['elements']:
         yield elem
 
+def default_sort_criteria(element_1, element_2):
+    is_sorted = False
+    if element_1 < element_2:
+        is_sorted = True
+    return is_sorted
 
 def shell_sort(my_list, sort_crit):
     n = my_list['size']
