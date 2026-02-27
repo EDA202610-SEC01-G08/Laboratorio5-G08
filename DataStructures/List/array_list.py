@@ -109,3 +109,14 @@ def default_sort_criteria(element_1, element_2):
     if element_1 < element_2:
         is_sorted = True
     return is_sorted
+
+def selection_sort(my_list, cmp_function=default_sort_criteria):
+    """Se recorre la lista y se selecciona el elemento más pequeño y se intercambia con el primer elemento. Luego se selecciona el segundo elemento más pequeño y se intercambia con el segundo elemento, y así sucesivamente."""
+    size = my_list['size']
+    for i in range(size):
+        min_index = i
+        for j in range(i + 1, size):
+            if cmp_function(my_list['elements'][j], my_list['elements'][min_index]):
+                min_index = j
+        exchange(my_list, i, min_index)
+    return my_list
