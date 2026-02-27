@@ -171,3 +171,9 @@ def sub_list(my_list,pos_i, num_elem):
         add_last(sublist, current_node['info'])
         current_node = current_node['next']
     return sublist
+
+def default_sort_criteria(element_1, element_2):
+    is_sorted = False
+    if element_1 < element_2:
+        is_sorted = True
+    return is_sorted
