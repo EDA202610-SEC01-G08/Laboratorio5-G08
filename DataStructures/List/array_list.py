@@ -103,3 +103,5 @@ def iterator(my_list):
     """Yield elements from the list (preserves external 1-based semantics where callers expect elements)."""
     for elem in my_list['elements']:
         yield elem
+`
+def shell_sort(my_list, sort_crit):
