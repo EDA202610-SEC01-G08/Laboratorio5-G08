@@ -103,3 +103,9 @@ def iterator(my_list):
     """Yield elements from the list (preserves external 1-based semantics where callers expect elements)."""
     for elem in my_list['elements']:
         yield elem
+        
+def default_sort_criteria(element_1, element_2):
+    is_sorted = False
+    if element_1 < element_2:
+        is_sorted = True
+    return is_sorted
