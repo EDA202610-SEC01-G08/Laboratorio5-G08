@@ -103,5 +103,30 @@ def iterator(my_list):
     """Yield elements from the list (preserves external 1-based semantics where callers expect elements)."""
     for elem in my_list['elements']:
         yield elem
-`
+
+
 def shell_sort(my_list, sort_crit):
+    n = my_list['size']
+    gap = n // 2
+    while gap > 0:
+        for i in range(gap, n):
+            temp = my_list['elements'][i]
+            j = i
+            while j >= gap and sort_crit(my_list['elements'][j - gap], temp) > 0:
+                my_list['elements'][j] = my_list['elements'][j - gap]
+                j -= gap
+            my_list['elements'][j] = temp
+        gap //= 2
+
+    return my_list
+
+def selection_sort(my_list, cmp_function=default_sort_criteria):
+    """Se recorre la lista y se selecciona el elemento más pequeño y se intercambia con el primer elemento. Luego se selecciona el segundo elemento más pequeño y se intercambia con el segundo elemento, y así sucesivamente."""
+    size = my_list['size']
+    for i in range(size):
+        min_index = i
+        for j in range(i + 1, size):
+            if cmp_function(my_list['elements'][j], my_list['elements'][min_index]):
+                min_index = j
+        exchange(my_list, i, min_index)
+    return my_list
