@@ -149,3 +149,41 @@ def insertion_sort(my_list,sort_crit):
         
     return my_list
     
+
+def merge_sort(my_list, sort_crit):
+    if my_list['size'] > 1:
+        mid = my_list['size'] // 2
+        left_half = {
+            'elements': my_list['elements'][:mid],
+            'size': mid
+        }
+        right_half = {
+            'elements': my_list['elements'][mid:],
+            'size': my_list['size'] - mid
+        }
+        
+        merge_sort(left_half, sort_crit)
+        merge_sort(right_half, sort_crit)
+        
+        i = j = k = 0
+        
+        while i < left_half['size'] and j < right_half['size']:
+            if sort_crit(left_half['elements'][i], right_half['elements'][j]):
+                my_list['elements'][k] = left_half['elements'][i]
+                i += 1
+            else:
+                my_list['elements'][k] = right_half['elements'][j]
+                j += 1
+            k += 1
+        
+        while i < left_half['size']:
+            my_list['elements'][k] = left_half['elements'][i]
+            i += 1
+            k += 1
+        
+        while j < right_half['size']:
+            my_list['elements'][k] = right_half['elements'][j]
+            j += 1
+            k += 1
+            
+    return my_list
