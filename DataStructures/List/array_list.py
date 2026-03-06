@@ -135,3 +135,17 @@ def selection_sort(my_list, cmp_function=default_sort_criteria):
                 min_index = j
         exchange(my_list, i, min_index)
     return my_list
+
+def insertion_sort(my_list,sort_crit):
+    size = my_list['size']
+    elements = my_list['elements']
+    for i in range(1, size):
+        key = elements[i]
+        j = i - 1
+        while j >= 0 and sort_crit(key, elements[j]):
+            elements[j + 1] = elements[j]
+            j -= 1
+        elements[j + 1] = key
+        
+    return my_list
+    
