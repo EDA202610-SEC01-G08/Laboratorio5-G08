@@ -177,3 +177,53 @@ def default_sort_criteria(element_1, element_2):
     if element_1 < element_2:
         is_sorted = True
     return is_sorted
+
+def selection_sort(my_list, cmp_function=default_sort_criteria):
+    if my_list['size'] > 1:
+        current_node = my_list['first']
+        while current_node is not None:
+            min_node = current_node
+            next_node = current_node['next']
+            while next_node is not None:
+                if cmp_function(next_node['info'], min_node['info']):
+                    min_node = next_node
+                next_node = next_node['next']
+            if min_node != current_node:
+                current_node['info'], min_node['info'] = min_node['info'], current_node['info']
+            current_node = current_node['next']
+    return my_list
+
+def insertion_sort(my_list, cmp_function=default_sort_criteria):
+    if my_list['size'] > 1:
+        sorted_list = new_list()
+        current_node = my_list['first']
+        while current_node is not None:
+            insert_element(sorted_list, current_node['info'], 0)
+            current_node = current_node['next']
+        return selection_sort(sorted_list, cmp_function)
+    return my_list
+
+def shell_sort(my_list, cmp_function=default_sort_criteria):
+    if my_list['size'] > 1:
+        n = my_list['size']
+        gap = n // 2
+        while gap > 0:
+            for i in range(gap, n):
+                temp_node = my_list['first']
+                for _ in range(i):
+                    temp_node = temp_node['next']
+                temp_info = temp_node['info']
+                j = i
+                while j >= gap:
+                    prev_node = my_list['first']
+                    for _ in range(j - gap):
+                        prev_node = prev_node['next']
+                    if cmp_function(prev_node['info'], temp_info):
+                        break
+                    temp_node = prev_node
+                    j -= gap
+                temp_node['info'] = temp_info
+            gap //= 2
+    return my_list
+
+
