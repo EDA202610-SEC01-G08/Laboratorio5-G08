@@ -227,3 +227,73 @@ def shell_sort(my_list, cmp_function=default_sort_criteria):
     return my_list
 
 
+def merge_sort(my_list, cmp_function=default_sort_criteria):
+    if my_list['size'] > 1:
+        mid = my_list['size'] // 2
+        left_half = sub_list(my_list, 0, mid)
+        right_half = sub_list(my_list, mid, my_list['size'] - mid)
+        merge_sort(left_half, cmp_function)
+        merge_sort(right_half, cmp_function)
+
+        i = j = k = 0
+        while i < left_half['size'] and j < right_half['size']:
+            if cmp_function(left_half['first']['info'], right_half['first']['info']):
+                change_info(my_list, k, left_half['first']['info'])
+                left_half['first'] = left_half['first']['next']
+                i += 1
+            else:
+                change_info(my_list, k, right_half['first']['info'])
+                right_half['first'] = right_half['first']['next']
+                j += 1
+            k += 1
+
+        while i < left_half['size']:
+            change_info(my_list, k, left_half['first']['info'])
+            left_half['first'] = left_half['first']['next']
+            i += 1
+            k += 1
+
+        while j < right_half['size']:
+            change_info(my_list, k, right_half['first']['info'])
+            right_half['first'] = right_half['first']['next']
+            j += 1
+            k += 1
+    return my_list
+
+def quick_sort(my_list, cmp_function=default_sort_criteria):
+    if my_list['size'] <= 1:
+        return
+
+    pivot = my_list['first']['info']
+    less = new_list()
+    equal = new_list()
+    greater = new_list()
+
+    current_node = my_list['first']
+    while current_node is not None:
+        if cmp_function(current_node['info'], pivot):
+            add_last(less, current_node['info'])
+        elif cmp_function(pivot, current_node['info']):
+            add_last(greater, current_node['info'])
+        else:
+            add_last(equal, current_node['info'])
+        current_node = current_node['next']
+
+    if less['size'] > 0 and less['size'] < my_list['size']:
+        quick_sort(less, cmp_function)
+    if greater['size'] > 0 and greater['size'] < my_list['size']:
+        quick_sort(greater, cmp_function)
+
+    # Concatenate less, equal, greater into my_list
+    # Clear my_list
+    my_list['first'] = None
+    my_list['last'] = None
+    my_list['size'] = 0
+
+    for i in range(less['size']):
+        add_last(my_list, get_elemet(less, i))
+    for i in range(equal['size']):
+        add_last(my_list, get_elemet(equal, i))
+    for i in range(greater['size']):
+        add_last(my_list, get_elemet(greater, i))
+    return
