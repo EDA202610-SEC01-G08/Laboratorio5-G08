@@ -187,3 +187,23 @@ def merge_sort(my_list, sort_crit):
             k += 1
             
     return my_list
+
+def quick_sort(my_list, sort_crit):
+    if my_list['size'] > 1:
+        pivot = my_list['elements'][my_list['size'] // 2]
+        left = {
+            'elements': [x for x in my_list['elements'] if sort_crit(x, pivot) and x != pivot],
+            'size': 0
+        }
+        right = {
+            'elements': [x for x in my_list['elements'] if not sort_crit(x, pivot)],
+            'size': 0
+        }
+
+        quick_sort(left, sort_crit)
+        quick_sort(right, sort_crit)
+
+        my_list['elements'] = left['elements'] + [pivot] + right['elements']
+        my_list['size'] = len(my_list['elements'])
+
+    return my_list
