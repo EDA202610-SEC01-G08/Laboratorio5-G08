@@ -54,6 +54,7 @@ def print_menu():
     """
     print("Bienvenido")
     #TODO: agregar opción 0 para escoger el tipo de estructura de datos y opción 5 para seleccionar el algoritmo de ordenamiento
+    print("0- Seleccionar estructura de datos")
     print("1- Cargar información en el catálogo")
     print("2- Consultar la información de un libro")
     print("3- Consultar los libros de un autor")
@@ -123,28 +124,29 @@ def print_book_info(book):
     else:
         print('No se encontraron libros')
 
-
-
-def print_sort_results(sort_books, sample=3):
+def print_sort_results(sorted_books, sample=3):
     """
     Imprime la información de una muestra de libros ordenados.
 
     Args:
-    sort_books (data_structure): La estructura de datos que contiene los libros ordenados.
+    sorted_books (data_structure): La estructura de datos que contiene los libros ordenados.
     sample (int): El número de libros a imprimir. Por defecto, 3.
     
     Se espera que la función imprima la información de 'sample' libros usando la función
     print_book_info(). 
     """
-    # Recorrer los elementos de la estructura de datos 'sort_books'.
-    sorted_books=  sort_books[0]
+    size = data_structure.size(sorted_books)  
+    if size == 0:
+        print("No hay libros disponibles para mostrar.")
+        return
 
-    for book_pos in range(0, data_structure.size(sorted_books)):
+    # Recorrer los elementos de la estructura de datos 'sorted_books'.
+    for book_pos in range(1, size + 1):
         # Si todavía hay libros que imprimir en la muestra.
         if sample > 0:
             # Obtener el libro en la posición actual.
             book = data_structure.get_element(sorted_books, book_pos)
-            # TODO: Completar la lógica para imprimir la información del libro.
+            print_book_info(book)
             # Disminuir el contador de la muestra.
             sample -= 1
 
@@ -179,18 +181,22 @@ def main():
     while working:
         print_menu()
         inputs = input("Seleccione una opción para continuar\n")
-        
+
         if int(inputs[0]) == 0:
             # Capturamos la estructura de datos seleccionada
             user_data_structure = select_data_structure()
-        
+
             # Se crea el controlador asociado a la vista
             control = new_logic(user_data_structure)
-            
+
         elif int(inputs[0]) == 1:
             print("Cargando información de los archivos ....")
             bk, at, tg, bktg = load_data(control)
             #TODO: imprimir la cantidad de libros, autores, géneros y asociaciones de géneros a libros cargados
+            print('Libros cargados: ', data_structure.size(bk))
+            print('Autores cargados: ', data_structure.size(at))
+            print('Géneros cargados: ', data_structure.size(tg))
+            print('Asociaciones de géneros a libros cargados: ', data_structure.size(bktg))
 
         elif int(inputs[0]) == 2:
             number = input("Ingrese el id del libro que desea buscar: ")
@@ -206,22 +212,24 @@ def main():
             label = input("Etiqueta a buscar: ")
             book_count = logic.count_books_by_tag(control, label)
             print('Se encontraron: ', book_count, ' Libros')
-                 
+
         elif int(inputs[0]) == 5:
-            algo_opt = input(algo_str)
-            algo_opt = int(algo_opt)
-            algo_msg = logic.select_sort_algorithm(algo_opt)
-            print(algo_msg[1])
-            
+            select_sort_algorithm()
+
         elif int(inputs[0]) == 6:
             size = input("Indique tamaño de la muestra: ")
             size = int(size)
             logic.set_book_sublist(control, size)
 
         elif int(inputs[0]) == 7:
+            if logic.sort_algorithm is None:
+                print("Debe seleccionar un algoritmo de ordenamiento antes de ordenar.")
+                select_sort_algorithm()
+
             print("Ordenando los libros por rating ...")
             result = logic.sort_books(control)
             #TODO:imprimir el resultado del ordenamiento 
+            print_sort_results(result[0], size)
             print("Tiempo de ejecución:", f"{result[1]:.3f}", "[ms]")
 
         elif int(inputs[0]) == 8:
@@ -236,3 +244,27 @@ def main():
         else:
             continue
     sys.exit(0)
+
+def select_sort_algorithm():
+    """
+    Captura la selección del usuario y configura el algoritmo de ordenamiento.
+    """
+    print("\nSeleccione el algoritmo de ordenamiento:")
+    print("1 - Selection Sort")
+    print("2 - Insertion Sort")
+    print("3 - Shell Sort")
+    print("4 - Merge Sort")
+    print("5 - Quick Sort")
+
+    algo_opt = ""
+
+    while algo_opt == "":
+        algo_opt = input("\nSeleccione una opción: ")
+        if algo_opt in ["1", "2", "3", "4", "5"]:
+            algo_opt = int(algo_opt)
+            algo_msg = logic.select_sort_algorithm(algo_opt)
+            print(algo_msg[1])
+            return algo_opt
+        else:
+            print("Opción no válida. Intente de nuevo.")
+            algo_opt = ""

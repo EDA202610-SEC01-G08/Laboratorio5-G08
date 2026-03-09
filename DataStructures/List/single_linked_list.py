@@ -63,7 +63,7 @@ def last_element(my_list):
     return my_list['last']['info']
 
 def get_element(my_list, pos):
-    searchpos = 0
+    searchpos = 1
     node = my_list['first']
     while searchpos < pos:
         node = node['next']
@@ -226,4 +226,69 @@ def shell_sort(my_list, cmp_function=default_sort_criteria):
             gap //= 2
     return my_list
 
+def merge(my_list, left_list, right_list, cmp_function):
+    my_list['first'] = None
+    my_list['last'] = None
+    my_list['size'] = 0
+    
+    left_node = left_list['first']
+    right_node = right_list['first']
+    
+    while left_node is not None and right_node is not None:
+        if cmp_function(left_node['info'], right_node['info']):
+            add_last(my_list, left_node['info'])
+            left_node = left_node['next']
+        else:
+            add_last(my_list, right_node['info'])
+            right_node = right_node['next']
+    
+    while left_node is not None:
+        add_last(my_list, left_node['info'])
+        left_node = left_node['next']
+    
+    while right_node is not None:
+        add_last(my_list, right_node['info'])
+        right_node = right_node['next']
 
+def merge_sort(my_list, cmp_function=default_sort_criteria):
+    if my_list['size'] > 1:
+        mid = my_list['size'] // 2
+        left_list = sub_list(my_list, 0, mid)
+        right_list = sub_list(my_list, mid, my_list['size'] - mid)
+        merge_sort(left_list, cmp_function)
+        merge_sort(right_list, cmp_function)
+        merge(my_list, left_list, right_list, cmp_function)
+    return my_list
+
+def quick_sort(my_list, cmp_function=default_sort_criteria):
+    if my_list['size'] > 1:
+        pivot = my_list['first']['info']
+        less = new_list()
+        equal = new_list()
+        greater = new_list()
+        current_node = my_list['first']
+        while current_node is not None:
+            if current_node['info'] == pivot:
+                add_last(equal, current_node['info'])
+            elif cmp_function(current_node['info'], pivot):
+                add_last(less, current_node['info'])
+            else:
+                add_last(greater, current_node['info'])
+            current_node = current_node['next']
+        quick_sort(less, cmp_function)
+        quick_sort(greater, cmp_function)
+        my_list['first'] = None
+        my_list['size'] = 0
+        current_node = less['first']
+        while current_node is not None:
+            add_last(my_list, current_node['info'])
+            current_node = current_node['next']
+        current_node = equal['first']
+        while current_node is not None:
+            add_last(my_list, current_node['info'])
+            current_node = current_node['next']
+        current_node = greater['first']
+        while current_node is not None:
+            add_last(my_list, current_node['info'])
+            current_node = current_node['next']
+    return my_list
